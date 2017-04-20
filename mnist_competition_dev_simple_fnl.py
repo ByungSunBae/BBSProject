@@ -10,7 +10,7 @@ np.random.seed(777)
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
 flags = tf.app.flags
-flags.DEFINE_integer('max_steps', 500000, """Number of max steps to run.""")
+flags.DEFINE_integer('max_steps', 10000, """Number of max steps to run.""")
 
 flags.DEFINE_string('train_dir', './mnist_mymodel_exp',
                            """Directory where to write event logs """
@@ -19,7 +19,7 @@ flags.DEFINE_string('train_dir', './mnist_mymodel_exp',
 flags.DEFINE_integer('batch_size', 100, 
                            """Number of batches.""")
 
-flags.DEFINE_float('keep_drop_value', 0.5, 
+flags.DEFINE_float('keep_drop_value', 1.0, 
                            """(1 - dropout ratio)""")
 
 flags.DEFINE_boolean('only_cpu', False, 
