@@ -48,10 +48,12 @@ with tf.device("/cpu:0"):
 
     with slim.arg_scope([slim.fully_connected],
                       weights_initializer=slim.initializers.xavier_initializer()):
-        net = slim.fully_connected(inputs=x, num_outputs=600, scope="net")
+        net = slim.fully_connected(inputs=x, num_outputs=500, scope="net")
         net_drop = slim.dropout(inputs=net, keep_prob=keep_prob, scope="net_drop")
-        net1 = DnnSkipModule(inputs=net_drop, num_outputs=600, n=1)
-        net2 = DnnSkipModule(inputs=net1, num_outputs=600, n=2)
+        net1 = slim.fully_connected(inputs=net_drop, num_outputs=400, scope="net1")
+        net1_drop =slim.dropout(inputs=net1, keep_prob=keep_prob, scope="net1_drop")
+        net1_skip = DnnSkipModule(inputs=net1_drop, num_outputs=400, n=1)
+        net2 = DnnSkipModule(inputs=net1_skip, num_outputs=400, n=2)
         net3 = slim.fully_connected(inputs=net2, num_outputs=400, scope = "net3")
         net3_drop = slim.dropout(inputs=net3, keep_prob=keep_prob, scope="net3_drop")
         net4 = slim.fully_connected(inputs=net3_drop, num_outputs=10,
@@ -64,7 +66,7 @@ with tf.device("/cpu:0"):
     num_batches_per_epoch = 60000 / FLAGS.batch_size
     num_epochs_per_decay = 10.0
     decay_steps = int(num_batches_per_epoch * num_epochs_per_decay)
-    learning_rate_decay_rate = 0.1
+    learning_rate_decay_rate = 0.2
     init_learning_rate = 0.1
     lr = tf.train.exponential_decay(init_learning_rate,
                                     global_step,
